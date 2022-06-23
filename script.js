@@ -4,6 +4,9 @@ const transactionUl = document.querySelector('#transactions')
 const incomeDisplay = document.querySelector('#money-plus')
 const expenseDisplay = document.querySelector('#money-minus')
 const balanceDisplay = document.querySelector('#balance')
+const form = document.querySelector('#form')
+const inputTransactionName = document.querySelector('#text')
+const inputTransactionAmount = document.querySelector('#amount')
 
 //  mock...
 const dummyTransactions = [
@@ -13,6 +16,7 @@ const dummyTransactions = [
     {id: 4, name: 'violão', amount: 150},
 ]
 
+//LISTA DE TRASAÇÕES
 const addTransactionsIntoDOM = transaction =>{
     
     const operator = transaction.amount < 0? '-': '+'
@@ -61,8 +65,41 @@ const addTransactionsIntoDOM = transaction =>{
 //renderizando a tela
 
 const init = () => {
+    transactionUl.innerHTML = ''
     dummyTransactions.forEach(addTransactionsIntoDOM)
     updateBalanceValues()
 }
 
 init()
+
+//eventos
+
+const generateId = () => dummyTransactions.length +1
+
+
+form.addEventListener('submit', event =>{
+    event.preventDefault()
+
+    const transactionName = inputTransactionName.value.trim()
+    const transactionAmount = inputTransactionAmount.value.trim()
+
+    if(transactionName === '' || transactionAmount ===''){
+        alert("preencha todos os campos!")
+        return
+    }
+
+    const transaction = {
+        id: generateId(), 
+        name: transactionName, 
+        amount: Number(transactionAmount)
+    }
+    
+    dummyTransactions.push(transaction)
+
+    console.log(dummyTransactions)
+    
+    init()
+
+    inputTransactionAmount.value= ''
+    inputTransactionName.value = ''
+})
