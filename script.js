@@ -8,18 +8,17 @@ const form = document.querySelector('#form')
 const inputTransactionName = document.querySelector('#text')
 const inputTransactionAmount = document.querySelector('#amount')
 
-//  mock...
-let dummyTransactions = [
-    {id: 1, name: 'bolo de brigadeiro', amount: -20},
-    {id: 2, name: 'salario', amount: 300},
-    {id: 3, name: 'torta de frango', amount: -10},
-    {id: 4, name: 'violão', amount: 150},
-]
+
+//LOCALSTORAGE
+const localStorageTransactions = JSON.parse(localStorage.getItem("transactions"))
+let transactions = localStorage.getItem("transactions")!== null? localStorageTransactions: []
+ 
 
 //REMOVER TRANSAÇÃO
 const removeTransaction = ID =>{
-    dummyTransactions = dummyTransactions.filter(transaction => transaction.id !== ID)
-    console.log(dummyTransactions)
+    transactions = transactions.filter(transaction => transaction.id !== ID)
+    init()
+    updateLocalStorage()
 }
 
 //ADD LISTA DE TRASAÇÕES
@@ -49,7 +48,7 @@ const addTransactionsIntoDOM = transaction =>{
     const updateBalanceValues = ()=>{
         const sum = (accumulator, transaction) => accumulator + transaction
         //todos os valores:
-        const transactionAmounts = dummyTransactions.map( transaction => transaction.amount)
+        const transactionAmounts = transactions.map( transaction => transaction.amount)
         //saldo
         const total = transactionAmounts.reduce(sum, 0).toFixed(2)
         
@@ -75,15 +74,25 @@ const addTransactionsIntoDOM = transaction =>{
 
 const init = () => {
     transactionUl.innerHTML = ''
-    dummyTransactions.forEach(addTransactionsIntoDOM)
+    transactions.forEach(addTransactionsIntoDOM)
     updateBalanceValues()
 }
 
 init()
 
+//UPDATE NO LOCALSTORAGE
+
+const updateLocalStorage = ()=> {
+    localStorage.setItem("transactions", JSON.stringify(transactions))
+
+}
+
+
 //eventos
 
-const generateId = () => dummyTransactions.length +1
+const generateId = () => transactions.length +1
+
+const handleFormSubmit = 
 
 
 form.addEventListener('submit', event =>{
@@ -103,11 +112,13 @@ form.addEventListener('submit', event =>{
         amount: Number(transactionAmount)
     }
     
-    dummyTransactions.push(transaction)
+    transactions.push(transaction)
 
-    console.log(dummyTransactions)
+    console.log(transactions)
     
     init()
+
+    updateLocalStorage()
 
     inputTransactionAmount.value= ''
     inputTransactionName.value = ''
