@@ -92,34 +92,37 @@ const updateLocalStorage = ()=> {
 
 const generateId = () => transactions.length +1
 
-const handleFormSubmit = 
 
+const addToTransactionArray = (transactionName, transactionAmount)=>{    
+    transactions.push({
+        id: generateId(), 
+        name: transactionName, 
+        amount: Number(transactionAmount)
+    })
+}
 
-form.addEventListener('submit', event =>{
+const cleanInputs= ()=>{
+    inputTransactionAmount.value= ''
+    inputTransactionName.value = ''
+}
+
+const handleFormSubmit = event =>{
     event.preventDefault()
 
     const transactionName = inputTransactionName.value.trim()
     const transactionAmount = inputTransactionAmount.value.trim()
+    const isEmptySomeInput = transactionName === '' || transactionAmount ===''
 
-    if(transactionName === '' || transactionAmount ===''){
+    if(isEmptySomeInput){
         alert("preencha todos os campos!")
         return
-    }
-
-    const transaction = {
-        id: generateId(), 
-        name: transactionName, 
-        amount: Number(transactionAmount)
-    }
-    
-    transactions.push(transaction)
-
-    console.log(transactions)
+    }    
     
     init()
-
+    addToTransactionArray(transactionName, transactionAmount)
     updateLocalStorage()
+    cleanInputs()
+}
 
-    inputTransactionAmount.value= ''
-    inputTransactionName.value = ''
-})
+
+form.addEventListener('submit', handleFormSubmit )
