@@ -9,14 +9,20 @@ const inputTransactionName = document.querySelector('#text')
 const inputTransactionAmount = document.querySelector('#amount')
 
 //  mock...
-const dummyTransactions = [
+let dummyTransactions = [
     {id: 1, name: 'bolo de brigadeiro', amount: -20},
     {id: 2, name: 'salario', amount: 300},
     {id: 3, name: 'torta de frango', amount: -10},
     {id: 4, name: 'violão', amount: 150},
 ]
 
-//LISTA DE TRASAÇÕES
+//REMOVER TRANSAÇÃO
+const removeTransaction = ID =>{
+    dummyTransactions = dummyTransactions.filter(transaction => transaction.id !== ID)
+    console.log(dummyTransactions)
+}
+
+//ADD LISTA DE TRASAÇÕES
 const addTransactionsIntoDOM = transaction =>{
     
     const operator = transaction.amount < 0? '-': '+'
@@ -27,8 +33,11 @@ const addTransactionsIntoDOM = transaction =>{
 
     li.classList.add(CSSClass)
     li.innerHTML = `
-        ${transaction.name} <span>${operator}
-         R$ ${amountWithOutOperator}</span><button class="delete-btn">x</button>
+        ${transaction.name} 
+        <span>${operator}R$ ${amountWithOutOperator}</span>
+        <button class="delete-btn" onClick= "removeTransaction(${transaction.id})">
+        x
+        </button>
     `
 
     transactionUl.append(li)
